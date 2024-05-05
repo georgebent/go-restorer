@@ -6,9 +6,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Run restore program")
-
-	err := runner.Restore("1.quick_save")
+	err := runner.Save("quick_save")
 	if err != nil {
 		fmt.Println("Got error: ", err)
 	}
