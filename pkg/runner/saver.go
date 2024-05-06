@@ -7,7 +7,17 @@ import (
 	"github.com/georgebent/go-restorer/pkg/io_manager"
 )
 
-func Save(name string) error {
+func QuickSave() error {
+	return saveByName("quick_save")
+}
+
+func Save() error {
+	name := io_manager.Read("Enter backup name: ")
+
+	return saveByName(name)
+}
+
+func saveByName(name string) error {
 	backups := core.GetEnv("BACKUP_DIR")
 	folders, err := file_manager.ListFolders(backups)
 	if err != nil {

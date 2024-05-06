@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	err := runner.Save("quick_save")
+	err := runner.QuickSave()
 	if err != nil {
 		fmt.Println("Got error: ", err)
 	}

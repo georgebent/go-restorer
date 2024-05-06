@@ -5,26 +5,30 @@ import (
 	"github.com/georgebent/go-restorer/pkg/core"
 	"github.com/georgebent/go-restorer/pkg/file_manager"
 	"github.com/georgebent/go-restorer/pkg/io_manager"
+	"strconv"
 )
 
-func Restore(name string) error {
-	// Todo: add options from backups in folder
-	options := map[int]string{
-		1: "yes",
-		2: "no",
-	}
-
-	chosen := io_manager.Ask("Are you sure ?", options)
-	if chosen != 1 {
-		return nil
-	}
-
-	source := core.GetEnv("ORIGIN_DIR")
+func Restore() error {
 	backups := core.GetEnv("BACKUP_DIR")
-	backupsTmpPath := fmt.Sprintf("%s/tmp", backups)
-	backupPath := fmt.Sprintf("%s/%s", backups, name)
+	source := core.GetEnv("ORIGIN_DIR")
 
-	err := file_manager.ForceCopy(source, backupsTmpPath)
+	folders, err := file_manager.ListFolders(backups)
+	if err != nil {
+		return err
+	}
+
+	options := map[string]string{}
+	for i, folder := range folders {
+		key := strconv.Itoa(i + 1)
+		options[key] = folder
+	}
+
+	chosen := io_manager.Ask("Choose restore file", options)
+
+	backupsTmpPath := fmt.Sprintf("%s/tmp", backups)
+	backupPath := fmt.Sprintf("%s/%s", backups, options[chosen])
+
+	err = file_manager.ForceCopy(source, backupsTmpPath)
 	if err != nil {
 		return err
 	}
