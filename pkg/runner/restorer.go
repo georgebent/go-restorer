@@ -5,7 +5,6 @@ import (
 	"github.com/georgebent/go-restorer/pkg/core"
 	"github.com/georgebent/go-restorer/pkg/file_manager"
 	"github.com/georgebent/go-restorer/pkg/io_manager"
-	"strconv"
 )
 
 func Restore() error {
@@ -17,16 +16,15 @@ func Restore() error {
 		return err
 	}
 
-	options := map[string]string{}
-	for i, folder := range folders {
-		key := strconv.Itoa(i + 1)
-		options[key] = folder
+	var options []string
+	for _, folder := range folders {
+		options = append(options, folder)
 	}
 
 	chosen := io_manager.Ask("Choose restore file", options)
 
 	backupsTmpPath := fmt.Sprintf("%s/tmp", backups)
-	backupPath := fmt.Sprintf("%s/%s", backups, options[chosen])
+	backupPath := fmt.Sprintf("%s/%s", backups, chosen)
 
 	err = file_manager.ForceCopy(source, backupsTmpPath)
 	if err != nil {

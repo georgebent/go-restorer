@@ -3,6 +3,7 @@ package io_manager
 import (
 	"bufio"
 	"fmt"
+	"github.com/manifoldco/promptui"
 	"os"
 	"strings"
 )
@@ -23,29 +24,25 @@ func Read(question string) string {
 	return text
 }
 
-func Ask(question string, options map[string]string) string {
+func Ask(question string, options []string) string {
 	if len(options) == 0 {
 		os.Exit(0)
 	}
 
-	menu := NewMenu(question)
-	for i, variant := range options {
-		menu.AddItem(variant, i)
+	prompt := promptui.Select{
+		Label: question,
+		Items: options,
 	}
 
-	choice := menu.Display()
+	_, result, err := prompt.Run()
 
-	fmt.Printf("Choice: %s\n", options[choice])
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
 
-	if strings.ToLower(choice) == "exit" {
-		fmt.Println("Вихід з програми...")
-		os.Exit(0)
+		return ""
 	}
 
-	_, ok := options[choice]
-	if !ok {
-		return Ask("Вибір не вірний. Будь ласка, спробуйте ще раз.", options)
-	}
+	fmt.Printf("You choose %q\n", result)
 
-	return choice
+	return result
 }

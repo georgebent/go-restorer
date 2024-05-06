@@ -12,7 +12,7 @@ func QuickSave() error {
 }
 
 func Save() error {
-	name := io_manager.Read("Enter backup name: ")
+	name := io_manager.Read("Enter backup name: \n")
 
 	return saveByName(name)
 }

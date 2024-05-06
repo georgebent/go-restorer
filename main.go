@@ -9,27 +9,27 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello")
+	runProgram()
+}
 
-	options := map[string]string{}
-	options["1"] = "Save"
-	options["2"] = "Restore"
-	options["3"] = "List"
-
+func runProgram() {
+	options := []string{"Save", "Restore", "List"}
 	chosen := io_manager.Ask("Choose action", options)
 
+	println(chosen)
+
 	switch chosen {
-	case "1":
+	case "Save":
 		err := runner.Save()
 		if err != nil {
 			fmt.Println("Got error: ", err)
 		}
-	case "2":
+	case "Restore":
 		err := runner.Restore()
 		if err != nil {
 			fmt.Println("Got error: ", err)
 		}
-	case "3":
+	case "List":
 		backups := core.GetEnv("BACKUP_DIR")
 		folders, err := file_manager.ListFolders(backups)
 		if err != nil {
@@ -40,4 +40,8 @@ func main() {
 			println(folder)
 		}
 	}
+
+	println()
+
+	runProgram()
 }
